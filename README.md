@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # AI-Assisted Quality Engineering Platform
 
 This repository implements an AI-agent-independent quality engineering platform. It combines deterministic domain engines, reusable Playwright and API frameworks, traceability, coverage analysis, reporting, governed generation templates, and GitHub Actions execution.
@@ -78,3 +79,6 @@ npm run test:playwright -- --project chromium
 | `RUN_API_TESTS` | Set to `true` to execute the live API example |
 
 Secrets must be supplied by the execution environment and must never be committed.
+=======
+# AISolutionQA
+>>>>>>> b10370605de22daf1bd71d6db783f7c14464e677
