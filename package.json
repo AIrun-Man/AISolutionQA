@@ -1,0 +1,74 @@
+{
+  "name": "quality-engineering-platform",
+  "description": "TypeScript quality engineering platform with Jira workflow orchestration, requirement analysis, automation, impact analysis, reporting, and CI integration.",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "platform-core",
+    "playwright-framework",
+    "api-framework"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace platform-core && npm run build --workspace playwright-framework && npm run build --workspace api-framework",
+    "lint": "npm run lint --workspace platform-core && npm run lint --workspace playwright-framework && npm run lint --workspace api-framework",
+    "validate:workflows": "node scripts/validate-workflows.mjs",
+    "test:core": "npm --workspace platform-core run test",
+    "test:playwright": "npm run test --workspace playwright-framework --",
+    "test:api": "npm --workspace api-framework run test",
+    "test": "npm run test:core && npm run test:api && npm run test:playwright"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "@types/node": "^20.14.12",
+    "yaml": "^2.8.1"
+  },
+  "x-dependency-justification": {
+    "@platform/core": {
+      "classification": "Development Dependency",
+      "files": ["playwright-framework/playwright.config.ts"],
+      "reason": "Internal workspace module used only while loading the Playwright test configuration to validate generation config and resolve report paths."
+    },
+    "@playwright/test": {
+      "classification": "Development Dependency",
+      "files": [
+        "playwright-framework/playwright.config.ts",
+        "playwright-framework/src/fixtures/authentication.ts",
+        "playwright-framework/src/fixtures/index.ts",
+        "playwright-framework/src/pages/BasePage.ts",
+        "playwright-framework/src/pages/DashboardPage.ts",
+        "playwright-framework/src/pages/LoginPage.ts"
+      ],
+      "reason": "Runs the repository's browser automation tests and supplies Playwright fixtures, Page types, assertions, and HTML reporting."
+    },
+    "zod": {
+      "classification": "Production Dependency",
+      "files": ["api-framework/src/schemas/user.ts", "api-framework/src/validators/response-validator.ts"],
+      "reason": "Defines and executes runtime API response schema validation."
+    },
+    "typescript": {
+      "classification": "Development Dependency",
+      "files": ["package.json", "platform-core/package.json", "api-framework/package.json", "playwright-framework/package.json"],
+      "reason": "The build and lint scripts in these manifests invoke tsc to compile and type-check the TypeScript workspaces."
+    },
+    "@types/node": {
+      "classification": "Development Dependency",
+      "files": [
+        "api-framework/src/reporting/ApiReport.ts",
+        "api-framework/src/tests/framework.test.ts",
+        "api-framework/src/tests/user-api.test.ts",
+        "platform-core/src/reporting/generator.ts",
+        "platform-core/src/requirements/engine.ts",
+        "platform-core/src/storage/generation.ts",
+        "platform-core/src/test-cases/engine.ts",
+        "platform-core/src/tests/core.test.ts",
+        "playwright-framework/playwright.config.ts"
+      ],
+      "reason": "Provides compile-time declarations for the imported Node.js filesystem, path, URL, OS, and test-runner APIs; it is not a runtime package."
+    },
+    "yaml": {
+      "classification": "Development Dependency",
+      "files": ["scripts/validate-workflows.mjs"],
+      "reason": "Parses GitHub Actions YAML for the repository's workflow validation command."
+    }
+  }
+}

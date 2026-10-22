@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:existing-test-intelligence:1.0.0",
+  "title": "Existing Test Intelligence Bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["repositories", "frameworks", "standards", "pipelines", "inventory", "coverage", "regressionImpact", "coverageDelta", "reuseStrategy", "reuseGovernance", "executionRecommendation"],
+  "properties": {
+    "repositories": { "$ref": "#/$defs/automationRepositoryModel" },
+    "frameworks": { "$ref": "#/$defs/frameworkIntelligenceModel" },
+    "standards": { "$ref": "#/$defs/repositoryStandardsModel" },
+    "pipelines": { "$ref": "#/$defs/pipelineExecutionModel" },
+    "inventory": { "$ref": "#/$defs/testInventoryModel" },
+    "coverage": { "$ref": "#/$defs/coverageDiscoveryModel" },
+    "regressionImpact": { "$ref": "#/$defs/regressionImpactModel" },
+    "coverageDelta": { "$ref": "#/$defs/coverageDeltaModel" },
+    "reuseStrategy": { "$ref": "#/$defs/reuseGenerationStrategy" },
+    "reuseGovernance": { "$ref": "#/$defs/reuseGovernanceReport" },
+    "executionRecommendation": { "$ref": "#/$defs/smartRegressionRecommendation" }
+  },
+  "$defs": {
+    "version": { "const": "1.0.0" },
+    "strings": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "repositoryRevision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "revision"],
+      "properties": { "repository": { "type": "string", "minLength": 3 }, "revision": { "type": "string", "minLength": 1 } }
+    },
+    "automationRepositoryModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "repositories"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" },
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "repository", "repositoryOwner", "purpose", "acquisitionStatus", "inventory", "warnings"],
+            "properties": {
+              "kind": { "enum": ["ui", "api"] },
+              "repository": { "type": "string", "pattern": "^[^/]+/[^/]+$" },
+              "repositoryOwner": { "type": "string", "minLength": 1 },
+              "purpose": { "type": "string", "minLength": 1 },
+              "ownershipTeam": { "type": "string", "minLength": 1 },
+              "acquisitionStatus": { "enum": ["available", "not-cloned", "unavailable", "unknown"] },
+              "revision": { "type": "string", "minLength": 1 },
+              "defaultBranch": { "type": "string", "minLength": 1 },
+              "inventory": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["fileCount", "files", "automationCount", "xrayTestCount", "suiteCount", "workflowCount", "topLevelDirectories"],
+                "properties": {
+                  "fileCount": { "type": "integer", "minimum": 0 },
+                  "files": { "$ref": "#/$defs/strings" },
+                  "automationCount": { "type": "integer", "minimum": 0 },
+                  "xrayTestCount": { "type": "integer", "minimum": 0 },
+                  "suiteCount": { "type": "integer", "minimum": 0 },
+                  "workflowCount": { "type": "integer", "minimum": 0 },
+                  "topLevelDirectories": { "$ref": "#/$defs/strings" }
+                }
+              },
+              "warnings": { "$ref": "#/$defs/strings" }
+            }
+          }
+        }
+      }
+    },
+    "frameworkIntelligenceModel": {
+      "type": "object", "additionalProperties": false, "required": ["schemaVersion", "repositories"],
+      "properties": { "schemaVersion": { "$ref": "#/$defs/version" }, "repositories": { "type": "array", "items": { "$ref": "#/$defs/frameworkRepository" } } }
+    },
+    "frameworkRepository": {
+      "type": "object", "additionalProperties": false,
+      "required": ["repository", "programmingLanguages", "uiFramework", "apiFramework", "executionFramework", "designPatterns", "assertionLibraries", "utilities", "sharedLibraries", "pageObjects", "apiClients", "requestBuilders", "evidenceFiles"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 3 }, "revision": { "type": "string", "minLength": 1 },
+        "programmingLanguages": { "$ref": "#/$defs/strings" }, "uiFramework": { "$ref": "#/$defs/strings" },
+        "apiFramework": { "$ref": "#/$defs/strings" }, "executionFramework": { "$ref": "#/$defs/strings" },
+        "designPatterns": { "$ref": "#/$defs/strings" }, "assertionLibraries": { "$ref": "#/$defs/strings" },
+        "utilities": { "$ref": "#/$defs/strings" }, "sharedLibraries": { "$ref": "#/$defs/strings" },
+        "pageObjects": { "$ref": "#/$defs/strings" }, "apiClients": { "$ref": "#/$defs/strings" },
+        "requestBuilders": { "$ref": "#/$defs/strings" }, "evidenceFiles": { "$ref": "#/$defs/strings" }
+      }
+    },
+    "repositoryStandardsModel": {
+      "type": "object", "additionalProperties": false, "required": ["schemaVersion", "repositories"],
+      "properties": { "schemaVersion": { "$ref": "#/$defs/version" }, "repositories": { "type": "array", "items": { "$ref": "#/$defs/standardsRepository" } } }
+    },
+    "standardsRepository": {
+      "type": "object", "additionalProperties": false,
+      "required": ["repository", "directoryPatterns", "namingPatterns", "pageObjectPatterns", "locatorStrategies", "utilityPatterns", "requestBuilderPatterns", "assertionPatterns", "evidenceFiles"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 3 }, "revision": { "type": "string", "minLength": 1 },
+        "directoryPatterns": { "$ref": "#/$defs/strings" }, "namingPatterns": { "$ref": "#/$defs/strings" },
+        "pageObjectPatterns": { "$ref": "#/$defs/strings" }, "locatorStrategies": { "type": "array", "items": { "type": "string" } },
+        "utilityPatterns": { "$ref": "#/$defs/strings" }, "requestBuilderPatterns": { "$ref": "#/$defs/strings" },
+        "assertionPatterns": { "$ref": "#/$defs/strings" }, "evidenceFiles": { "$ref": "#/$defs/strings" }
+      }
+    },
+    "pipelineWorkflow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "name", "triggers", "executionCommands", "environmentVariables", "reports", "artifacts", "actionReferences"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 }, "name": { "type": "string", "minLength": 1 },
+        "triggers": { "$ref": "#/$defs/strings" }, "executionCommands": { "$ref": "#/$defs/strings" },
+        "environmentVariables": { "$ref": "#/$defs/strings" }, "reports": { "$ref": "#/$defs/strings" },
+        "artifacts": { "$ref": "#/$defs/strings" }, "actionReferences": { "$ref": "#/$defs/strings" }
+      }
+    },
+    "pipelineExecutionModel": {
+      "type": "object", "additionalProperties": false, "required": ["schemaVersion", "repositories"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" },
+        "repositories": { "type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["repository", "workflows", "executionCommands", "environmentVariables", "reportingMechanisms", "artifacts", "githubActionsCompatible", "compatibilityFindings"],
+          "properties": {
+            "repository": { "type": "string", "minLength": 3 }, "revision": { "type": "string", "minLength": 1 },
+            "workflows": { "type": "array", "items": { "$ref": "#/$defs/pipelineWorkflow" } },
+            "executionCommands": { "$ref": "#/$defs/strings" }, "environmentVariables": { "$ref": "#/$defs/strings" },
+            "reportingMechanisms": { "$ref": "#/$defs/strings" }, "artifacts": { "$ref": "#/$defs/strings" },
+            "githubActionsCompatible": { "type": ["boolean", "null"] }, "compatibilityFindings": { "$ref": "#/$defs/strings" }
+          }
+        } }
+      }
+    },
+    "existingTest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "source", "active", "coverageStatus", "requirementIds", "acceptanceCriteriaIds", "scenarioIds", "apiIds", "componentIds", "businessLogicIds", "changedFiles", "suiteIds"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 }, "title": { "type": "string", "minLength": 1 },
+        "source": { "enum": ["xray", "automation"] }, "repository": { "type": "string" }, "path": { "type": "string" },
+        "active": { "type": "boolean" }, "coverageStatus": { "enum": ["current", "historical", "unknown"] },
+        "sourceRevision": { "type": "string" }, "issueKey": { "type": "string" },
+        "strategy": { "enum": ["ui", "api", "contract", "component", "performance"] },
+        "requirementIds": { "$ref": "#/$defs/strings" }, "acceptanceCriteriaIds": { "$ref": "#/$defs/strings" },
+        "scenarioIds": { "$ref": "#/$defs/strings" }, "apiIds": { "$ref": "#/$defs/strings" },
+        "componentIds": { "$ref": "#/$defs/strings" }, "businessLogicIds": { "$ref": "#/$defs/strings" },
+        "changedFiles": { "$ref": "#/$defs/strings" }, "suiteIds": { "$ref": "#/$defs/strings" }
+      }
+    },
+    "automationAsset": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "repository", "path", "strategy", "active", "coverageStatus", "testIssueKeys", "requirementIds", "acceptanceCriteriaIds", "scenarioIds", "apiIds", "componentIds", "businessLogicIds", "changedFiles", "suiteIds", "utilityRefs"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 }, "title": { "type": "string", "minLength": 1 },
+        "repository": { "type": "string", "minLength": 3 }, "path": { "type": "string", "minLength": 1 },
+        "strategy": { "enum": ["ui", "api", "contract", "component", "performance"] }, "active": { "type": "boolean" },
+        "coverageStatus": { "enum": ["current", "historical", "unknown"] }, "sourceRevision": { "type": "string" }, "sourceFingerprint": { "type": "string" },
+        "testIssueKeys": { "$ref": "#/$defs/strings" }, "requirementIds": { "$ref": "#/$defs/strings" },
+        "acceptanceCriteriaIds": { "$ref": "#/$defs/strings" }, "scenarioIds": { "$ref": "#/$defs/strings" },
+        "apiIds": { "$ref": "#/$defs/strings" }, "componentIds": { "$ref": "#/$defs/strings" },
+        "businessLogicIds": { "$ref": "#/$defs/strings" }, "changedFiles": { "$ref": "#/$defs/strings" },
+        "suiteIds": { "$ref": "#/$defs/strings" }, "utilityRefs": { "$ref": "#/$defs/strings" }
+      }
+    },
+    "suite": {
+      "type": "object", "additionalProperties": false, "required": ["id", "name", "kind", "testIds"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 }, "name": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["smoke", "functional", "regression", "api", "performance", "other"] },
+        "testIds": { "$ref": "#/$defs/strings" }, "repository": { "type": "string" }, "path": { "type": "string" }
+      }
+    },
+    "testInventoryModel": {
+      "type": "object", "additionalProperties": false, "required": ["schemaVersion", "repositoryRevisions", "tests", "automation", "suites"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" }, "repositoryRevisions": { "type": "array", "items": { "$ref": "#/$defs/repositoryRevision" } },
+        "tests": { "type": "array", "items": { "$ref": "#/$defs/existingTest" } },
+        "automation": { "type": "array", "items": { "$ref": "#/$defs/automationAsset" } },
+        "suites": { "type": "array", "items": { "$ref": "#/$defs/suite" } }
+      }
+    },
+    "coverageRow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["targetId", "targetKind", "testRequired", "automationRequired", "status", "xrayTestIds", "automationIds", "missingEvidence"],
+      "properties": {
+        "targetId": { "type": "string", "minLength": 1 }, "targetKind": { "enum": ["requirement", "acceptance-criterion", "api", "ui-component", "business-logic"] },
+        "testRequired": { "type": "boolean" }, "automationRequired": { "type": "boolean" }, "status": { "enum": ["covered", "partial", "missing"] },
+        "xrayTestIds": { "$ref": "#/$defs/strings" }, "automationIds": { "$ref": "#/$defs/strings" },
+        "missingEvidence": { "type": "array", "items": { "enum": ["test", "automation"] }, "uniqueItems": true }
+      }
+    },
+    "coverageDiscoveryModel": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "repositoryRevisions", "rows", "coveredTargetIds", "partiallyCoveredTargetIds", "missingTargetIds"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" }, "repositoryRevisions": { "type": "array", "items": { "$ref": "#/$defs/repositoryRevision" } },
+        "rows": { "type": "array", "items": { "$ref": "#/$defs/coverageRow" } }, "coveredTargetIds": { "$ref": "#/$defs/strings" },
+        "partiallyCoveredTargetIds": { "$ref": "#/$defs/strings" }, "missingTargetIds": { "$ref": "#/$defs/strings" }
+      }
+    },
+    "regressionImpactModel": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "repositoryRevisions", "impactedTestIds", "impactedSuiteIds", "impactedRepositories", "impactedRegressionScope", "unmatchedChangedFiles", "requiresFullRegression"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" }, "repositoryRevisions": { "type": "array", "items": { "$ref": "#/$defs/repositoryRevision" } },
+        "impactedTestIds": { "$ref": "#/$defs/strings" }, "impactedSuiteIds": { "$ref": "#/$defs/strings" },
+        "impactedRepositories": { "$ref": "#/$defs/strings" }, "impactedRegressionScope": { "$ref": "#/$defs/strings" },
+        "unmatchedChangedFiles": { "$ref": "#/$defs/strings" }, "requiresFullRegression": { "type": "boolean" }
+      }
+    },
+    "coverageDeltaModel": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "repositoryRevisions", "rows", "coveredTargetIds", "partiallyCoveredTargetIds", "missingTargetIds", "changedTargetIds", "impactedCoveredTargetIds", "impactedPartialTargetIds", "impactedMissingTargetIds"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" }, "repositoryRevisions": { "type": "array", "items": { "$ref": "#/$defs/repositoryRevision" } },
+        "rows": { "type": "array", "items": { "$ref": "#/$defs/coverageRow" } }, "coveredTargetIds": { "$ref": "#/$defs/strings" },
+        "partiallyCoveredTargetIds": { "$ref": "#/$defs/strings" }, "missingTargetIds": { "$ref": "#/$defs/strings" },
+        "changedTargetIds": { "$ref": "#/$defs/strings" }, "impactedCoveredTargetIds": { "$ref": "#/$defs/strings" },
+        "impactedPartialTargetIds": { "$ref": "#/$defs/strings" }, "impactedMissingTargetIds": { "$ref": "#/$defs/strings" }
+      }
+    },
+    "reuseDecision": {
+      "type": "object", "additionalProperties": false, "required": ["targetId", "action", "testIds", "automationIds", "missingEvidence", "rationale"],
+      "properties": {
+        "targetId": { "type": "string", "minLength": 1 },
+        "action": { "enum": ["reuse-existing-test-and-automation", "reuse-existing-coverage", "reuse-test-generate-automation", "reuse-automation-generate-test", "extend-existing", "generate-missing-test-case", "generate-missing-automation", "generate-missing-test-and-automation"] },
+        "testIds": { "$ref": "#/$defs/strings" }, "automationIds": { "$ref": "#/$defs/strings" },
+        "missingEvidence": { "type": "array", "items": { "enum": ["test", "automation"] }, "uniqueItems": true }, "rationale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "reuseGenerationStrategy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "repositoryRevisions", "phases", "decisions", "testGenerationTargetIds", "automationGenerationTargetIds", "extensionTargetIds"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" }, "repositoryRevisions": { "type": "array", "items": { "$ref": "#/$defs/repositoryRevision" } },
+        "phases": { "type": "array", "items": { "enum": ["reuse-existing-tests", "reuse-existing-automation", "extend-existing-tests", "extend-existing-automation", "generate-missing-test-cases", "generate-missing-automation"] }, "minItems": 6, "maxItems": 6 },
+        "decisions": { "type": "array", "items": { "$ref": "#/$defs/reuseDecision" } },
+        "testGenerationTargetIds": { "$ref": "#/$defs/strings" }, "automationGenerationTargetIds": { "$ref": "#/$defs/strings" },
+        "extensionTargetIds": { "$ref": "#/$defs/strings" }
+      }
+    },
+    "reuseGovernanceReport": {
+      "type": "object", "additionalProperties": false, "required": ["schemaVersion", "decision", "analyzed", "findings", "blockedGenerationTargetIds"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" }, "decision": { "enum": ["PASS", "BLOCK"] },
+        "analyzed": {
+          "type": "object", "additionalProperties": false, "required": ["repositories", "frameworks", "standards", "pipelines", "tests", "automation", "xray", "suites"],
+          "properties": { "repositories": { "type": "boolean" }, "frameworks": { "type": "boolean" }, "standards": { "type": "boolean" }, "pipelines": { "type": "boolean" }, "tests": { "type": "boolean" }, "automation": { "type": "boolean" }, "xray": { "type": "boolean" }, "suites": { "type": "boolean" } }
+        },
+        "findings": { "type": "array", "items": {
+          "type": "object", "additionalProperties": false, "required": ["id", "category", "severity", "description", "evidence"],
+          "properties": { "id": { "type": "string" }, "category": { "type": "string" }, "severity": { "const": "critical" }, "description": { "type": "string" }, "evidence": { "$ref": "#/$defs/strings" } }
+        } },
+        "blockedGenerationTargetIds": { "$ref": "#/$defs/strings" }
+      }
+    },
+    "smartRegressionRecommendation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "repositoryRevisions", "scope", "recommendedSmokeTestIds", "recommendedFunctionalTestIds", "recommendedRegressionTestIds", "recommendedApiTestIds", "recommendedPerformanceTestIds", "impactedSuiteIds", "recommendedSuiteIds", "impactedRepositories", "rationale"],
+      "properties": {
+        "schemaVersion": { "$ref": "#/$defs/version" }, "repositoryRevisions": { "type": "array", "items": { "$ref": "#/$defs/repositoryRevision" } },
+        "scope": { "enum": ["impacted", "full-regression"] },
+        "executionContext": {
+          "type": "object", "additionalProperties": false,
+          "properties": { "targetEnvironment": { "type": "string" }, "art": { "enum": ["REX", "RAM"] }, "programIncrement": { "type": "string" } }
+        },
+        "recommendedSmokeTestIds": { "$ref": "#/$defs/strings" }, "recommendedFunctionalTestIds": { "$ref": "#/$defs/strings" },
+        "recommendedRegressionTestIds": { "$ref": "#/$defs/strings" }, "recommendedApiTestIds": { "$ref": "#/$defs/strings" },
+        "recommendedPerformanceTestIds": { "$ref": "#/$defs/strings" }, "impactedSuiteIds": { "$ref": "#/$defs/strings" },
+        "recommendedSuiteIds": { "$ref": "#/$defs/strings" },
+        "impactedRepositories": { "$ref": "#/$defs/strings" }, "rationale": { "$ref": "#/$defs/strings" }
+      }
+    }
+  }
+}

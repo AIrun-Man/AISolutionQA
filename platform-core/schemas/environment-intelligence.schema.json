@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:environment-intelligence:1.0.0",
+  "title": "Environment Intelligence Model",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "environments", "missingEnvironments", "configurationDifferences"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "environments": { "type": "array", "items": { "$ref": "#/$defs/environment" } },
+    "missingEnvironments": { "type": "array", "uniqueItems": true, "items": { "enum": ["DEV", "QA", "INT", "SIT", "UAT", "PREPROD", "PROD"] } },
+    "configurationDifferences": { "type": "array", "items": { "$ref": "#/$defs/difference" } }
+  },
+  "$defs": {
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "baseUrl", "authenticationPatterns", "environmentVariables", "apiEndpoints", "featureToggles", "configuration"],
+      "properties": {
+        "name": { "enum": ["DEV", "QA", "INT", "SIT", "UAT", "PREPROD", "PROD"] },
+        "acceptanceCriteriaIds": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^AC-[1-9][0-9]*$" } },
+        "baseUrl": { "type": "string", "format": "uri" },
+        "apiBaseUrl": { "type": "string", "format": "uri" },
+        "authenticationPatterns": { "type": "array", "uniqueItems": true, "items": { "enum": ["none", "basic", "bearer", "oauth2", "cookie", "sso", "client-certificate", "unknown"] } },
+        "environmentVariables": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["name", "required", "secret", "configured"], "properties": { "name": { "type": "string" }, "required": { "type": "boolean" }, "secret": { "type": "boolean" }, "configured": { "type": "boolean" } } } },
+        "apiEndpoints": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "featureToggles": { "type": "object", "additionalProperties": { "type": "boolean" } },
+        "configuration": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["key", "configured", "redacted"], "properties": { "key": { "type": "string" }, "configured": { "type": "boolean" }, "redacted": { "type": "boolean" } } } }
+      }
+    },
+    "difference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "differs", "environments"],
+      "properties": {
+        "key": { "type": "string" },
+        "differs": { "type": "boolean" },
+        "environments": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["name", "configured", "redacted"], "properties": { "name": { "enum": ["DEV", "QA", "INT", "SIT", "UAT", "PREPROD", "PROD"] }, "configured": { "type": "boolean" }, "redacted": { "type": "boolean" } } } }
+      }
+    }
+  }
+}

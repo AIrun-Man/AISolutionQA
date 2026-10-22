@@ -1,0 +1,12 @@
+import { test as base } from "@playwright/test";
+import { {{PageName}}Page } from "../pages/{{PageName}}Page.js";
+
+type Fixtures = {
+  {{fixtureName}}: {{PageName}}Page;
+};
+
+export const test = base.extend<Fixtures>({
+  {{fixtureName}}: async ({ page }, use) => {
+    await use(new {{PageName}}Page(page));
+  }
+});

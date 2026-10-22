@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:coverage-report:1.2.0",
+  "title": "Coverage Report",
+  "type": "object",
+  "required": ["totalRequirements", "coveredRequirements", "requirementCoveragePercent", "testCaseCoveragePercent", "codeCoveragePercent", "riskCoveragePercent", "criticalRequirementCoveragePercent", "highRiskCodeCoveragePercent", "coverageByDimension", "totalTestCases", "automatedTestCases", "automationCoveragePercent", "totalAutomation", "passedAutomation", "executionPassPercent", "gaps", "overallRiskScore", "riskLevel"],
+  "properties": {
+    "totalRequirements": { "type": "integer", "minimum": 0 },
+    "coveredRequirements": { "type": "integer", "minimum": 0 },
+    "requirementCoveragePercent": { "type": "number", "minimum": 0, "maximum": 100 },
+    "testCaseCoveragePercent": { "type": "number", "minimum": 0, "maximum": 100 },
+    "codeCoveragePercent": { "type": "number", "minimum": 0, "maximum": 100 },
+    "riskCoveragePercent": { "type": "number", "minimum": 0, "maximum": 100 },
+    "criticalRequirementCoveragePercent": { "type": "number", "minimum": 0, "maximum": 100 },
+    "highRiskCodeCoveragePercent": { "type": "number", "minimum": 0, "maximum": 100 },
+    "coverageByDimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requirement", "acceptanceCriteria", "codePath", "validation", "boundary", "negative", "risk", "highRiskCode"],
+      "properties": {
+        "requirement": { "$ref": "#/$defs/dimensionSummary" },
+        "acceptanceCriteria": { "$ref": "#/$defs/dimensionSummary" },
+        "codePath": { "$ref": "#/$defs/dimensionSummary" },
+        "validation": { "$ref": "#/$defs/dimensionSummary" },
+        "boundary": { "$ref": "#/$defs/dimensionSummary" },
+        "negative": { "$ref": "#/$defs/dimensionSummary" },
+        "risk": { "$ref": "#/$defs/dimensionSummary" },
+        "highRiskCode": { "$ref": "#/$defs/dimensionSummary" }
+      }
+    },
+    "totalTestCases": { "type": "integer", "minimum": 0 },
+    "automatedTestCases": { "type": "integer", "minimum": 0 },
+    "automationCoveragePercent": { "type": "number", "minimum": 0, "maximum": 100 },
+    "totalAutomation": { "type": "integer", "minimum": 0 },
+    "passedAutomation": { "type": "integer", "minimum": 0 },
+    "executionPassPercent": { "type": "number", "minimum": 0, "maximum": 100 },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "entityId", "severity", "riskScore"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["missing-test-case", "missing-acceptance-criteria-coverage", "missing-code-path-coverage", "missing-validation-coverage", "missing-boundary-coverage", "missing-negative-coverage", "missing-risk-coverage", "missing-high-risk-code-coverage", "missing-automation", "missing-execution", "failed-execution"] },
+          "entityId": { "type": "string", "minLength": 1 },
+          "severity": { "enum": ["critical", "high", "medium", "low"] },
+          "riskScore": { "type": "number", "minimum": 0, "maximum": 100 }
+        }
+      }
+    },
+    "overallRiskScore": { "type": "number", "minimum": 0, "maximum": 100 },
+    "riskLevel": { "enum": ["critical", "high", "medium", "low"] }
+  },
+  "$defs": {
+    "dimensionSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total", "covered", "coveragePercent"],
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "covered": { "type": "integer", "minimum": 0 },
+        "coveragePercent": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    }
+  }
+}

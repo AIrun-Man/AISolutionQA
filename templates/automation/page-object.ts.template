@@ -1,0 +1,13 @@
+import type { Page } from "@playwright/test";
+
+export class {{PageName}}Page {
+  constructor(private readonly page: Page) {}
+
+  get {{elementName}}() {
+    return this.page.{{approvedLocator}};
+  }
+
+  async {{businessAction}}(): Promise<void> {
+    await this.{{elementName}}.{{interaction}};
+  }
+}

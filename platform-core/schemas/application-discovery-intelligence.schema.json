@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:application-discovery-intelligence:1.0.0",
+  "title": "Application Discovery Intelligence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "applicationId", "applicationName", "baseUrl", "requirementIds", "uiDiscoveryModel", "navigationModel", "screenInventory", "componentInventory"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "applicationId": { "type": "string", "minLength": 1 },
+    "applicationName": { "type": "string", "minLength": 1 },
+    "baseUrl": { "type": "string", "format": "uri" },
+    "requirementIds": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "featureBranch": { "$ref": "application-discovery.schema.json#/properties/featureBranch" },
+    "uiDiscoveryModel": { "$ref": "application-discovery.schema.json" },
+    "navigationModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["paths", "userJourneys", "workflows"],
+      "properties": {
+        "paths": { "$ref": "application-discovery.schema.json#/properties/navigationPaths" },
+        "userJourneys": { "$ref": "application-discovery.schema.json#/properties/userJourneys" },
+        "workflows": { "$ref": "application-discovery.schema.json#/properties/workflows" }
+      }
+    },
+    "screenInventory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "route", "status", "pageIds"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "route": { "type": "string" },
+          "status": { "enum": ["discovered", "partial", "needs-review"] },
+          "pageIds": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "componentInventory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "pageId", "type", "visible", "enabled"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "pageId": { "type": "string" },
+          "type": { "enum": ["menu", "form", "field", "table", "table-column", "button", "dialog"] },
+          "visible": { "type": "boolean" },
+          "enabled": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

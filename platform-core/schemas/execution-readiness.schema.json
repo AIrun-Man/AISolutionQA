@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:execution-readiness:1.0.0",
+  "title": "Execution Readiness Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "storyKey", "decision", "executionReady", "qualityScore", "gates", "findings"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "storyKey": { "type": "string", "pattern": "^[A-Z][A-Z0-9]+-[1-9][0-9]*$" },
+    "decision": { "enum": ["PASS", "WARNING", "BLOCK"] },
+    "executionReady": { "type": "boolean" },
+    "qualityScore": { "type": "number", "minimum": 0, "maximum": 100 },
+    "gates": { "type": "array", "items": { "type": "object", "required": ["id", "passed", "value", "description"], "properties": { "id": { "type": "string" }, "passed": { "type": "boolean" }, "value": { "type": ["number", "string"] }, "threshold": { "type": "number" }, "description": { "type": "string" } } } },
+    "findings": { "type": "array", "items": { "$ref": "governance-report.schema.json#/$defs/finding" } }
+  }
+}

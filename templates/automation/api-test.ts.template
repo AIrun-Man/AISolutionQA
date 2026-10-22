@@ -1,0 +1,8 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+
+test("{{business behavior}}", async () => {
+  const response = await {{serviceClient}}.{{operation}}({{requestData}});
+  const validation = {{responseValidator}}(response);
+  assert.equal(validation.valid, true, validation.errors.join("; "));
+});

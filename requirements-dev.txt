@@ -1,0 +1,3 @@
+# No Python development dependencies are currently used. TypeScript compiler,
+# Node.js type definitions, YAML validation, Playwright, and test tooling remain
+# declared in the existing npm workspace manifests.

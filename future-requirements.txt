@@ -1,0 +1,2 @@
+# No Python future dependencies are declared by repository code or repository
+# capability specifications. Add packages only when such a capability is defined.

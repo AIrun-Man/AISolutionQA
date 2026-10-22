@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "1.0.0",
+  "applicationId": "APP-1",
+  "applicationName": "Sample Application",
+  "baseUrl": "https://example.com",
+  "pages": [
+    {
+      "id": "page-login",
+      "title": "Sign in",
+      "route": "/login",
+      "status": "discovered",
+      "menus": [],
+      "forms": [
+        {
+          "id": "form-login",
+          "name": "Sign in",
+          "fields": [
+            {
+              "id": "field-email",
+              "name": "Email",
+              "visible": true,
+              "enabled": true,
+              "fieldType": "email",
+              "required": true,
+              "validationIds": ["validation-email-required"]
+            }
+          ],
+          "submitButtonId": "button-login"
+        }
+      ],
+      "tables": [],
+      "buttons": [
+        {
+          "id": "button-login",
+          "name": "Sign in",
+          "visible": true,
+          "enabled": true
+        }
+      ],
+      "validations": [
+        {
+          "id": "validation-email-required",
+          "targetElementId": "field-email",
+          "type": "required",
+          "message": "Email is required.",
+          "trigger": "submit"
+        }
+      ]
+    },
+    {
+      "id": "page-dashboard",
+      "title": "Dashboard",
+      "route": "/dashboard",
+      "status": "discovered",
+      "menus": [],
+      "forms": [],
+      "tables": [],
+      "buttons": [],
+      "validations": []
+    }
+  ],
+  "navigationPaths": [
+    {
+      "id": "nav-login-dashboard",
+      "sourcePageId": "page-login",
+      "targetPageId": "page-dashboard",
+      "triggerElementId": "button-login",
+      "conditions": ["Valid credentials are submitted."]
+    }
+  ]
+}

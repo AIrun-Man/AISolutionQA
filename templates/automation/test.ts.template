@@ -1,0 +1,9 @@
+import { test, expect } from "../fixtures/index.js";
+
+test("{{business behavior}}", async ({ {{pageFixture}} }) => {
+  await test.step("{{business action}}", async () => {
+    await {{pageFixture}}.{{businessAction}}();
+  });
+
+  await expect({{pageFixture}}.{{observableState}}).{{assertion}};
+});

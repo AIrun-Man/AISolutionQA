@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:governance-report:1.0.0",
+  "title": "Governance Report",
+  "type": "object",
+  "required": ["schemaVersion", "governanceType", "storyKey", "status", "qualityScore", "findings"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "governanceType": { "type": "string", "minLength": 1 },
+    "storyKey": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["PASS", "WARNING", "BLOCK"] },
+    "qualityScore": { "type": "number", "minimum": 0, "maximum": 100 },
+    "confidenceScore": { "type": "number", "minimum": 0, "maximum": 1 },
+    "findings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+    "sanitizedArtifacts": { "type": "array", "items": { "type": "object", "required": ["artifactId", "status", "content"], "properties": { "artifactId": { "type": "string" }, "status": { "enum": ["sanitized", "blocked"] }, "content": { "type": "string" } } } }
+  },
+  "$defs": {
+    "finding": { "type": "object", "required": ["id", "category", "severity", "entityId", "description", "evidenceReferences"], "properties": { "id": { "type": "string" }, "category": { "type": "string" }, "severity": { "enum": ["info", "warning", "critical"] }, "entityId": { "type": "string" }, "description": { "type": "string" }, "evidenceReferences": { "type": "array", "items": { "type": "string" } }, "remediation": { "type": "string" } } }
+  }
+}

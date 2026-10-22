@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:jira-test-case-links:1.0.0",
+  "title": "Jira Test Case Issue Links",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["storyKey", "testCaseId", "issueKey", "issueUrl", "boardUrl", "projectKey", "repositoryPath", "sections", "testManagementTool"],
+    "properties": {
+      "storyKey": { "type": "string", "pattern": "^[A-Z][A-Z0-9]+-[1-9][0-9]*$" },
+      "testCaseId": { "type": "string", "pattern": "^TC-[1-9][0-9]*$" },
+      "issueKey": { "type": "string", "minLength": 1 },
+      "issueUrl": { "type": "string", "format": "uri" },
+      "boardUrl": { "type": "string", "format": "uri" },
+      "projectKey": { "type": "string", "minLength": 1 },
+      "repositoryPath": { "type": "string", "minLength": 1 },
+      "sections": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["UI", "API", "Performance"] } },
+      "testManagementTool": { "enum": ["Xray", "Zephyr", "TM4J", "Native Jira Issue Type"] }
+    }
+  }
+}

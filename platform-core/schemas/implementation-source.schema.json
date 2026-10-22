@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:implementation-source:1.0.0",
+  "title": "Implementation Source Model",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "storyKey", "repository", "featureBranch", "repositoryContext", "reconstructionRequired", "selectedSource", "discoveryStatus", "pullRequests", "mergeCommits", "commits", "repositoryDiffs", "changedFiles", "sourceShas", "memoryLeads", "ambiguityFindings", "unrelatedCommitShas", "incorrectBranchMappings"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "storyKey": { "type": "string", "pattern": "^[A-Z][A-Z0-9]+-[1-9][0-9]*$" },
+    "repository": { "type": "string", "minLength": 1 },
+    "featureBranch": { "$ref": "#/$defs/featureBranch" },
+    "repositoryContext": { "$ref": "#/$defs/repositoryContext" },
+    "reconstructionRequired": { "type": ["boolean", "null"] },
+    "selectedSource": { "enum": ["feature-branch", "pull-request", "merge-commit", "commit-history", "repository-diff", null] },
+    "discoveryStatus": { "$ref": "#/$defs/status" },
+    "pullRequests": { "type": "array", "items": { "$ref": "#/$defs/pullRequest" } },
+    "mergeCommits": { "type": "array", "items": { "$ref": "#/$defs/commit" } },
+    "commits": { "type": "array", "items": { "$ref": "#/$defs/commit" } },
+    "repositoryDiffs": { "type": "array", "items": { "$ref": "#/$defs/repositoryDiff" } },
+    "changedFiles": { "type": "array", "items": { "$ref": "#/$defs/changedFileWithSources" } },
+    "sourceShas": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "memoryLeads": { "type": "array", "items": { "$ref": "#/$defs/memoryLead" } },
+    "ambiguityFindings": { "type": "array", "items": { "type": "string" } },
+    "unrelatedCommitShas": { "type": "array", "items": { "type": "string" } },
+    "incorrectBranchMappings": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "status": { "enum": ["available", "unavailable", "not_checked", "unknown"] },
+    "changeType": { "enum": ["added", "modified", "deleted"] },
+    "changedFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "changeType"],
+      "properties": { "path": { "type": "string", "minLength": 1 }, "changeType": { "$ref": "#/$defs/changeType" } }
+    },
+    "changedFileWithSources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "changeType", "sourceReferences"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "changeType": { "$ref": "#/$defs/changeType" },
+        "sourceReferences": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "contextFact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "value", "references"],
+      "properties": {
+        "status": { "$ref": "#/$defs/status" },
+        "value": { "type": ["boolean", "null"] },
+        "references": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "repositoryContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["branchExists", "pullRequestExists", "mergeCommitExists", "commitHistoryAvailable", "reconstructionRequired"],
+      "properties": {
+        "branchExists": { "$ref": "#/$defs/contextFact" },
+        "pullRequestExists": { "$ref": "#/$defs/contextFact" },
+        "mergeCommitExists": { "$ref": "#/$defs/contextFact" },
+        "commitHistoryAvailable": { "$ref": "#/$defs/contextFact" },
+        "reconstructionRequired": { "$ref": "#/$defs/contextFact" }
+      }
+    },
+    "featureBranch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "name", "exists", "status", "linkedStoryKeys"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "name": { "type": ["string", "null"] },
+        "exists": { "type": ["boolean", "null"] },
+        "status": { "$ref": "#/$defs/status" },
+        "linkedStoryKeys": { "type": "array", "items": { "type": "string" } },
+        "reference": { "type": "string" },
+        "changedFiles": { "type": "array", "items": { "$ref": "#/$defs/changedFile" } }
+      }
+    },
+    "pullRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "url", "repository", "sourceBranch", "targetBranch", "state", "mergeStrategy", "linkedStoryKeys", "commitShas", "changedFiles", "association"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" },
+        "repository": { "type": "string", "minLength": 1 },
+        "sourceBranch": { "type": "string" },
+        "targetBranch": { "type": "string" },
+        "state": { "enum": ["open", "closed", "merged"] },
+        "mergeStrategy": { "enum": ["merge", "squash", "rebase", "unknown"] },
+        "linkedStoryKeys": { "type": "array", "items": { "type": "string" } },
+        "commitShas": { "type": "array", "items": { "type": "string" } },
+        "mergeCommitSha": { "type": "string" },
+        "changedFiles": { "type": "array", "items": { "$ref": "#/$defs/changedFile" } },
+        "association": { "enum": ["story-link", "feature-branch-link"] }
+      }
+    },
+    "commit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha", "repository", "message", "parentShas", "linkedStoryKeys", "pullRequestIds", "isMergeCommit", "changedFiles"],
+      "properties": {
+        "sha": { "type": "string", "minLength": 1 },
+        "repository": { "type": "string", "minLength": 1 },
+        "message": { "type": "string" },
+        "parentShas": { "type": "array", "items": { "type": "string" } },
+        "linkedStoryKeys": { "type": "array", "items": { "type": "string" } },
+        "pullRequestIds": { "type": "array", "items": { "type": "string" } },
+        "branches": { "type": "array", "items": { "type": "string" } },
+        "isMergeCommit": { "type": "boolean" },
+        "changedFiles": { "type": "array", "items": { "$ref": "#/$defs/changedFile" } }
+      }
+    },
+    "repositoryDiff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "repository", "baseSha", "headSha", "linkedStoryKeys", "reference", "changedFiles"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "repository": { "type": "string", "minLength": 1 },
+        "baseSha": { "type": "string", "minLength": 1 },
+        "headSha": { "type": "string", "minLength": 1 },
+        "baseBranch": { "type": "string" },
+        "linkedStoryKeys": { "type": "array", "items": { "type": "string" } },
+        "reference": { "type": "string", "minLength": 1 },
+        "changedFiles": { "type": "array", "items": { "$ref": "#/$defs/changedFile" } }
+      }
+    },
+    "memoryLead": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "storyKey", "repository", "reference", "relatedShas"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["pull-request", "merge-commit", "commit", "story-commit"] },
+        "storyKey": { "type": "string", "minLength": 1 },
+        "repository": { "type": "string", "minLength": 1 },
+        "reference": { "type": "string", "minLength": 1 },
+        "relatedShas": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

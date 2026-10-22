@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:traceability:1.0.0",
+  "title": "Traceability Graph",
+  "type": "object",
+  "required": ["entities", "links"],
+  "properties": {
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "type", "version", "status"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["requirement", "test-case", "automation", "execution", "report"] },
+          "version": { "type": "integer", "minimum": 1 },
+          "status": { "enum": ["active", "deprecated"] }
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "relationship", "sourceId", "sourceVersion", "targetId", "targetVersion", "status"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "relationship": { "enum": ["verified-by", "automated-by", "executed-as", "reported-in"] },
+          "sourceId": { "type": "string" },
+          "sourceVersion": { "type": "integer", "minimum": 1 },
+          "targetId": { "type": "string" },
+          "targetVersion": { "type": "integer", "minimum": 1 },
+          "status": { "enum": ["active", "suspect", "invalid", "deprecated"] }
+        }
+      }
+    }
+  }
+}

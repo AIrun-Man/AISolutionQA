@@ -1,0 +1,15 @@
+{
+  "entities": [
+    { "id": "REQ-1", "type": "requirement", "version": 1, "status": "active" },
+    { "id": "TC-1", "type": "test-case", "version": 1, "status": "active" },
+    { "id": "AUT-1", "type": "automation", "version": 1, "status": "active" },
+    { "id": "RES-1", "type": "execution", "version": 1, "status": "active" },
+    { "id": "REP-1", "type": "report", "version": 1, "status": "active" }
+  ],
+  "links": [
+    { "id": "L1", "relationship": "verified-by", "sourceId": "REQ-1", "sourceVersion": 1, "targetId": "TC-1", "targetVersion": 1, "status": "active" },
+    { "id": "L2", "relationship": "automated-by", "sourceId": "TC-1", "sourceVersion": 1, "targetId": "AUT-1", "targetVersion": 1, "status": "active" },
+    { "id": "L3", "relationship": "executed-as", "sourceId": "AUT-1", "sourceVersion": 1, "targetId": "RES-1", "targetVersion": 1, "status": "active" },
+    { "id": "L4", "relationship": "reported-in", "sourceId": "RES-1", "sourceVersion": 1, "targetId": "REP-1", "targetVersion": 1, "status": "active" }
+  ]
+}

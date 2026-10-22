@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1.0.0",
+  "analysisId": "RA-QE-1",
+  "story": {
+    "key": "QE-1",
+    "summary": "Authorized user signs in",
+    "description": "An authorized user can sign in and view the dashboard."
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC-1",
+      "description": "Valid credentials navigate the user to the dashboard."
+    }
+  ],
+  "functionalRequirements": [
+    {
+      "id": "FR-1",
+      "description": "Valid credentials navigate the user to the dashboard.",
+      "acceptanceCriteriaIds": ["AC-1"]
+    }
+  ],
+  "nonFunctionalRequirements": [],
+  "businessRules": [],
+  "validationRules": [],
+  "implicitRequirements": [],
+  "assumptions": [],
+  "risks": [],
+  "automationCandidates": [
+    {
+      "id": "AUT-CAND-1",
+      "scenarioId": "FS-1",
+      "acceptanceCriteriaIds": ["AC-1"],
+      "rationale": "The outcome for AC-1 is stated and can be assessed after application discovery."
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "FS-1",
+      "category": "functional",
+      "title": "Valid user signs in",
+      "objective": "Verify successful authentication.",
+      "priority": "critical",
+      "preconditions": ["An active user exists."],
+      "steps": [
+        {
+          "sequence": 1,
+          "action": "Submit valid credentials.",
+          "expectedOutcome": "The dashboard is displayed."
+        }
+      ],
+      "expectedResult": "The authenticated user can access the dashboard.",
+      "acceptanceCriteriaIds": ["AC-1"]
+    }
+  ]
+}

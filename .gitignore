@@ -1,0 +1,24 @@
+node_modules
+**/dist/
+/.idea
+/.vscode
+/.DS_Store
+coverage
+**/playwright-report/
+**/test-results/
+**/.cache/
+reports/executions/
+/reports/requirements/
+**/UI/Reports/
+**/UI/TestResults/
+**/API/Reports/
+**/API/TestResults/
+api-framework/reports/
+*.log
+.env
+.env.*
+!.env.example
+# FinOpsLens generated skills and repository graph
+.agents/
+.github/
+graphify-out/

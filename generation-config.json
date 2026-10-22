@@ -1,0 +1,33 @@
+{
+  "jiraUrl": "https://mercedes-benz.atlassian.net/browse/REQEX-600",
+  "jiraId": "REQEX-600",
+  "repositoryName": "MBSE-AIWithDevin",
+  "outputFolder": "./generated-test-cases",
+  "uiGenerationEnabled": true,
+  "apiGenerationEnabled": false,
+  "performanceGenerationEnabled": false,
+  "jiraStoryUrl": "https://mercedes-benz.atlassian.net/browse/REQEX-600",
+  "jiraBoardUrl": "",
+  "jiraProjectKey": "REQEX",
+  "testRepositoryPath": "",
+  "testManagementTool": "XRAY",
+  "xrayRepositoryPath": "AI_Generated_tests",
+  "xrayCreateStoryFolder": true,
+  "xrayStoryFolderPattern": "{storyId}",
+  "xrayImportFormat": "CSV",
+  "xrayAutoImport": false,
+  "linkAutomationToXray": true,
+  "updateXrayExecution": true,
+  "automationRepositories": [
+    {
+      "kind": "ui",
+      "repository": "MBSE-GHEC/mbse-test-automation",
+      "purpose": "UI automation and regression suites"
+    },
+    {
+      "kind": "api",
+      "repository": "MBSE-GHEC/mbse-api-test-automation",
+      "purpose": "API automation and regression suites"
+    }
+  ]
+}

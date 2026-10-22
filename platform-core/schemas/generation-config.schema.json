@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:generation-config:1.3.0",
+  "title": "Generation Configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["jiraUrl", "jiraId", "repositoryName", "outputFolder", "uiGenerationEnabled", "apiGenerationEnabled", "performanceGenerationEnabled"],
+  "properties": {
+    "jiraUrl": { "type": "string", "format": "uri" },
+    "jiraId": { "type": "string", "pattern": "^[A-Z][A-Z0-9]+-[1-9][0-9]*$" },
+    "repositoryName": { "type": "string", "minLength": 1 },
+    "outputFolder": { "type": "string", "minLength": 1 },
+    "uiGenerationEnabled": { "type": "boolean" },
+    "apiGenerationEnabled": { "type": "boolean" },
+    "performanceGenerationEnabled": { "type": "boolean" },
+    "jiraStoryUrl": { "anyOf": [{ "const": "" }, { "type": "string", "format": "uri" }] },
+    "jiraBoardUrl": { "anyOf": [{ "const": "" }, { "type": "string", "format": "uri" }] },
+    "jiraProjectKey": { "type": "string", "pattern": "^(|[A-Z][A-Z0-9]*)$" },
+    "testRepositoryPath": { "type": "string" },
+    "testManagementTool": { "enum": ["", "Xray", "XRAY", "Zephyr", "TM4J", "Native Jira Issue Type"] },
+    "xrayRepositoryPath": { "type": "string" },
+    "xrayCreateStoryFolder": { "type": "boolean" },
+    "xrayStoryFolderPattern": { "type": "string" },
+    "xrayImportFormat": { "enum": ["JSON", "CSV"] },
+    "xrayAutoImport": { "type": "boolean" },
+    "linkAutomationToXray": { "type": "boolean" },
+    "updateXrayExecution": { "type": "boolean" },
+    "minimumReadinessScore": { "type": "number", "minimum": 0, "maximum": 100, "default": 80 },
+    "automationRepositories": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "repository", "purpose"],
+        "properties": {
+          "kind": { "enum": ["ui", "api"] },
+          "repository": { "type": "string", "pattern": "^[^/\\s]+/[^/\\s]+$" },
+          "purpose": { "type": "string", "minLength": 1 },
+          "ownershipTeam": { "type": "string", "minLength": 1 }
+        }
+      },
+      "allOf": [
+        { "contains": { "properties": { "kind": { "const": "ui" } }, "required": ["kind"], "minContains": 1, "maxContains": 1 } },
+        { "contains": { "properties": { "kind": { "const": "api" } }, "required": ["kind"], "minContains": 1, "maxContains": 1 } }
+      ]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:xray-repository-analysis:1.0.0",
+  "title": "Xray Repository Analysis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "storyKey", "repositories", "folders", "activeTestCount", "deprecatedTestCount", "duplicateGroups", "coverageDelta", "warnings"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "storyKey": { "type": "string", "pattern": "^[A-Z][A-Z0-9]+-[1-9][0-9]*$" },
+    "repositories": { "type": "array", "items": { "type": "object", "required": ["path", "name"], "properties": { "path": { "type": "string" }, "name": { "type": "string" } } } },
+    "folders": { "type": "array", "items": { "type": "object", "required": ["repositoryPath", "path", "name"], "properties": { "repositoryPath": { "type": "string" }, "path": { "type": "string" }, "name": { "type": "string" } } } },
+    "activeTestCount": { "type": "integer", "minimum": 0 },
+    "deprecatedTestCount": { "type": "integer", "minimum": 0 },
+    "duplicateGroups": { "type": "array", "items": { "type": "object", "required": ["signature", "issueKeys", "summary"], "properties": { "signature": { "type": "string" }, "issueKeys": { "type": "array", "minItems": 2, "uniqueItems": true, "items": { "type": "string" } }, "summary": { "type": "string" } } } },
+    "coverageDelta": { "type": "array", "items": { "type": "object", "required": ["acceptanceCriteriaId", "activeTestIssueKeys", "historicalTestIssueKeys", "status"], "properties": { "acceptanceCriteriaId": { "type": "string" }, "activeTestIssueKeys": { "type": "array", "items": { "type": "string" } }, "historicalTestIssueKeys": { "type": "array", "items": { "type": "string" } }, "lastExecutionResult": { "enum": ["passed", "failed", "blocked", "skipped", "incomplete"] }, "lastExecutedAt": { "type": "string", "format": "date-time" }, "status": { "enum": ["covered", "historical-only", "missing"] } } } },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:test-data-intelligence:1.0.0",
+  "title": "Test Data Intelligence Model",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "storyKey", "requirements", "requirementsMatrix", "automationDataSets", "dataSetupStrategies", "dataCleanupStrategies"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "storyKey": { "type": "string", "pattern": "^[A-Z][A-Z0-9]+-[1-9][0-9]*$" },
+    "requirements": { "type": "array", "items": { "type": "object", "required": ["id", "acceptanceCriteriaId", "fieldName", "dataType", "mandatory", "sensitive", "sources", "sourceReferences"], "properties": { "id": { "type": "string" }, "acceptanceCriteriaId": { "type": "string" }, "fieldName": { "type": "string" }, "dataType": { "type": "string" }, "mandatory": { "type": "boolean" }, "sensitive": { "type": "boolean" }, "sources": { "type": "array", "uniqueItems": true, "items": { "enum": ["application", "api-contract", "database"] } }, "sourceReferences": { "type": "array", "items": { "type": "string" } } } } },
+    "requirementsMatrix": { "type": "array", "items": { "type": "object", "required": ["acceptanceCriteriaId", "mandatoryFieldIds", "reusableFieldIds", "unresolvedFieldIds"], "properties": { "acceptanceCriteriaId": { "type": "string" }, "mandatoryFieldIds": { "type": "array", "items": { "type": "string" } }, "reusableFieldIds": { "type": "array", "items": { "type": "string" } }, "unresolvedFieldIds": { "type": "array", "items": { "type": "string" } } } } },
+    "automationDataSets": { "type": "array", "items": { "type": "object", "required": ["id", "acceptanceCriteriaIds", "values", "unresolvedMandatoryFields", "setupStrategies", "cleanupStrategies"], "properties": { "id": { "type": "string" }, "acceptanceCriteriaIds": { "type": "array", "items": { "type": "string" } }, "values": { "type": "array", "items": { "type": "object", "required": ["fieldName", "source", "synthetic", "sensitive"], "properties": { "fieldName": { "type": "string" }, "source": { "enum": ["reusable", "synthetic", "environment-reference", "unresolved"] }, "synthetic": { "type": "boolean" }, "sensitive": { "type": "boolean" }, "value": { "type": ["string", "number", "boolean"] }, "reference": { "type": "string" } } } }, "unresolvedMandatoryFields": { "type": "array", "items": { "type": "string" } }, "setupStrategies": { "type": "array", "items": { "type": "string" } }, "cleanupStrategies": { "type": "array", "items": { "type": "string" } } } } },
+    "dataSetupStrategies": { "type": "array", "items": { "$ref": "#/$defs/strategy" } },
+    "dataCleanupStrategies": { "type": "array", "items": { "$ref": "#/$defs/strategy" } }
+  },
+  "$defs": {
+    "strategy": { "type": "object", "required": ["acceptanceCriteriaId", "strategy", "sourceId"], "properties": { "acceptanceCriteriaId": { "type": "string" }, "strategy": { "type": "string" }, "sourceId": { "type": "string" } } }
+  }
+}

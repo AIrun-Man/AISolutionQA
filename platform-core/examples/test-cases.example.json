@@ -1,0 +1,38 @@
+[
+  {
+    "id": "TC-1",
+    "version": 1,
+    "title": "Authorized user signs in",
+    "priority": "critical",
+    "scenarioType": "functional",
+    "preconditions": ["An active user exists."],
+    "steps": [
+      {
+        "sequence": 1,
+        "action": "Submit valid credentials.",
+        "expectedOutcome": "The dashboard is displayed."
+      }
+    ],
+    "expectedResult": "The authenticated user can access the dashboard.",
+    "traceability": {
+      "storyKey": "QE-1",
+      "acceptanceCriteriaIds": ["AC-1"],
+      "scenarioIds": ["FS-1"],
+      "codeReferences": [
+        {
+          "mappingId": "RCM-1",
+          "acceptanceCriteriaId": "AC-1",
+          "changeType": "modified",
+          "changeAreas": ["business-logic", "validation"],
+          "repository": "quality/platform",
+          "branch": "feature/QE-1-sign-in",
+          "pullRequest": "https://ghe.example/pulls/1",
+          "commit": "abc123def456",
+          "filePath": "src/auth/login.ts",
+          "changeSummary": "Valid credentials are checked before the dashboard is returned."
+        }
+      ]
+    },
+    "status": "approved"
+  }
+]

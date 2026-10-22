@@ -1,0 +1,15 @@
+[
+  {
+    "id": "RCM-1",
+    "storyKey": "QE-42",
+    "acceptanceCriteriaId": "AC-1",
+    "changeType": "modified",
+    "changeAreas": ["business-logic", "validation"],
+    "repository": "quality/platform",
+    "branch": "feature/QE-42-login",
+    "pullRequest": "https://ghe.example/pulls/42",
+    "commit": "abc123def456",
+    "filePath": "src/auth/login.ts",
+    "changeSummary": "Valid credentials are checked before the dashboard is returned."
+  }
+]

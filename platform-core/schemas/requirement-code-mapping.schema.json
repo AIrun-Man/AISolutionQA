@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:requirement-code-mapping:1.0.0",
+  "title": "Requirement-to-Code Mapping",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "storyKey", "acceptanceCriteriaId", "changeType", "changeAreas", "repository", "branch", "commit", "filePath", "changeSummary"],
+    "properties": {
+      "id": { "type": "string", "pattern": "^RCM-[1-9][0-9]*$" },
+      "storyKey": { "type": "string", "pattern": "^[A-Z][A-Z0-9]+-[1-9][0-9]*$" },
+      "acceptanceCriteriaId": { "type": "string", "pattern": "^AC-[1-9][0-9]*$" },
+      "changeType": { "enum": ["added", "modified", "deleted"] },
+      "changeAreas": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["business-logic", "service", "api", "validation", "database", "ui", "ui-component", "error-handling", "other"] } },
+      "repository": { "type": "string", "minLength": 1 },
+      "branch": { "type": "string", "minLength": 1 },
+      "pullRequest": { "type": "string", "minLength": 1 },
+      "commit": { "type": "string", "minLength": 1 },
+      "filePath": { "type": "string", "minLength": 1 },
+      "changeSummary": { "type": "string", "minLength": 1 }
+    }
+  }
+}

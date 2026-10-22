@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:evidence-model:1.0.0",
+  "title": "Unified Evidence Model",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "storyKey", "sourcePriority", "evidence", "featureBranches", "implementationModel", "traceability", "confirmedBehaviors", "missingBehaviors", "assumptions", "risks", "confidenceScores"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "storyKey": { "type": "string", "pattern": "^[A-Z][A-Z0-9]+-[1-9][0-9]*$" },
+    "sourcePriority": { "type": "array", "uniqueItems": true, "items": { "enum": ["jira-requirement", "implementation", "implementation-source", "implementation-reconstruction", "implementation-trust", "api-contract", "adr", "application-discovery", "historical-jira", "test-reuse", "environment", "test-data", "xray-repository", "xray-test", "automation"] } },
+    "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidenceReference" } },
+    "featureBranches": { "type": "array", "items": { "$ref": "#/$defs/featureBranch" } },
+    "implementationSourceModel": { "$ref": "implementation-source.schema.json" },
+    "implementationReconstructionModel": { "$ref": "implementation-reconstruction.schema.json" },
+    "implementationTrustReport": { "$ref": "implementation-trust.schema.json" },
+    "applicationDiscovery": { "$ref": "application-discovery-intelligence.schema.json" },
+    "testReuseAnalysis": { "$ref": "test-reuse-analysis.schema.json" },
+    "environmentModel": { "$ref": "environment-intelligence.schema.json" },
+    "testDataModel": { "$ref": "test-data-intelligence.schema.json" },
+    "xrayRepositoryAnalysis": { "$ref": "xray-repository-analysis.schema.json" },
+    "implementationModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["addedFiles", "modifiedFiles", "deletedFiles", "businessLogicFiles", "serviceFiles", "apiFiles", "validationFiles", "databaseFiles", "uiFiles", "uiComponentFiles", "errorHandlingFiles"],
+      "properties": {
+        "addedFiles": { "$ref": "#/$defs/stringList" },
+        "modifiedFiles": { "$ref": "#/$defs/stringList" },
+        "deletedFiles": { "$ref": "#/$defs/stringList" },
+        "businessLogicFiles": { "$ref": "#/$defs/stringList" },
+        "serviceFiles": { "$ref": "#/$defs/stringList" },
+        "apiFiles": { "$ref": "#/$defs/stringList" },
+        "validationFiles": { "$ref": "#/$defs/stringList" },
+        "databaseFiles": { "$ref": "#/$defs/stringList" },
+        "uiFiles": { "$ref": "#/$defs/stringList" },
+        "uiComponentFiles": { "$ref": "#/$defs/stringList" },
+        "errorHandlingFiles": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "traceability": { "type": "array", "items": { "$ref": "#/$defs/traceabilityRow" } },
+    "confirmedBehaviors": { "type": "array", "items": { "$ref": "#/$defs/behaviorFinding" } },
+    "missingBehaviors": { "type": "array", "items": { "$ref": "#/$defs/behaviorFinding" } },
+    "assumptions": { "type": "array", "items": { "$ref": "#/$defs/assumption" } },
+    "risks": { "type": "array", "items": { "$ref": "#/$defs/risk" } },
+    "confidenceScores": { "type": "array", "items": { "$ref": "#/$defs/confidenceScore" } }
+  },
+  "$defs": {
+    "stringList": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "evidenceReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sourceType", "reference", "description"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "sourceType": { "enum": ["jira-requirement", "historical-jira", "implementation", "implementation-source", "implementation-reconstruction", "implementation-trust", "api-contract", "adr", "application-discovery", "test-reuse", "environment", "test-data", "xray-repository", "xray-test", "automation"] },
+        "reference": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 }
+      }
+    },
+    "featureBranch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "branch", "commitIds", "storyReference"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "branch": { "type": "string", "minLength": 1 },
+        "pullRequest": { "type": "string", "minLength": 1 },
+        "commitIds": { "$ref": "#/$defs/stringList" },
+        "storyReference": { "type": "string", "minLength": 1 }
+      }
+    },
+    "traceabilityRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["acceptanceCriteriaId", "evidenceIds", "implementationMappingIds", "apiOperationIds", "historicalIssueKeys", "adrIds", "testCaseIds", "automationIds"],
+      "properties": {
+        "acceptanceCriteriaId": { "type": "string", "pattern": "^AC-[1-9][0-9]*$" },
+        "evidenceIds": { "$ref": "#/$defs/stringList" },
+        "implementationMappingIds": { "$ref": "#/$defs/stringList" },
+        "apiOperationIds": { "$ref": "#/$defs/stringList" },
+        "historicalIssueKeys": { "$ref": "#/$defs/stringList" },
+        "adrIds": { "$ref": "#/$defs/stringList" },
+        "testCaseIds": { "$ref": "#/$defs/stringList" },
+        "automationIds": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "behaviorFinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["acceptanceCriteriaId", "description", "evidenceIds", "reason"],
+      "properties": {
+        "acceptanceCriteriaId": { "type": "string", "pattern": "^AC-[1-9][0-9]*$" },
+        "description": { "type": "string", "minLength": 1 },
+        "evidenceIds": { "$ref": "#/$defs/stringList" },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "assumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "description", "rationale"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^ASM-[1-9][0-9]*$" },
+        "description": { "type": "string", "minLength": 1 },
+        "rationale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "description", "rationale", "priority", "acceptanceCriteriaIds"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "rationale": { "type": "string", "minLength": 1 },
+        "priority": { "enum": ["critical", "high", "medium", "low"] },
+        "acceptanceCriteriaIds": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "confidenceScore": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["acceptanceCriteriaId", "score", "sourceScores", "evidenceIds"],
+      "properties": {
+        "acceptanceCriteriaId": { "type": "string", "pattern": "^AC-[1-9][0-9]*$" },
+        "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "sourceScores": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "jira-requirement": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "implementation": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "implementation-source": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "implementation-reconstruction": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "implementation-trust": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "api-contract": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "historical-jira": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "adr": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "application-discovery": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "test-reuse": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "environment": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "test-data": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "xray-repository": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "xray-test": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "automation": { "type": "integer", "minimum": 0, "maximum": 100 }
+          }
+        },
+        "evidenceIds": { "$ref": "#/$defs/stringList" }
+      }
+    }
+  }
+}

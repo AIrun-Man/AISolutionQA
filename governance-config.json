@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "1.0.0",
+  "requirementGuardrails": {
+    "minimumConfidence": 0.8,
+    "minimumAcceptanceCriteria": 1,
+    "minimumBusinessRules": 0,
+    "maximumAmbiguousAcceptanceCriteria": 0,
+    "duplicateStoryConfidenceThreshold": 0.85,
+    "requiredBusinessContextFields": ["actor", "businessContext", "outcome"],
+    "ambiguityPatterns": ["\\bTBD\\b", "\\bto be determined\\b", "\\bas needed\\b", "\\bappropriate\\b", "\\band/or\\b"],
+    "blockMissingDependencies": true
+  },
+  "testGenerationGuardrails": {
+    "minimumCoveragePercent": 95,
+    "minimumRiskCoveragePercent": 100,
+    "minimumExpectedResultLength": 12,
+    "minimumAssertionReferences": 1,
+    "detectDuplicateTests": true,
+    "detectDuplicateScenarios": true,
+    "requireValidUserJourneys": true,
+    "blockRedundantCoverage": true
+  },
+  "automationGuardrails": {
+    "requireFrameworkCompliance": true,
+    "requirePageObjects": true,
+    "requireUtilityReuse": true,
+    "requireAssertions": true,
+    "requireTestTraceability": true,
+    "detectDuplicateLocators": true,
+    "detectDuplicateScripts": true,
+    "duplicateLocatorSeverity": "critical",
+    "namingPattern": "^[a-z0-9]+(?:-[a-z0-9]+)*\\.(?:spec|test)\\.ts$",
+    "frameworkComplianceMarkers": ["@playwright/test", "@platform/core", "HttpClient"],
+    "minimumAssertionCount": 1,
+    "prohibitedPatterns": [
+      { "id": "fixed-wait", "pattern": "page\\.waitForTimeout\\s*\\(", "description": "Fixed browser waits are prohibited.", "severity": "critical" },
+      { "id": "hardcoded-credential", "pattern": "(?:password|api[_-]?key|token)\\s*[:=]\\s*['\\\"][^'\\\"]+", "description": "Credentials and tokens must come from the approved secret store.", "severity": "critical" },
+      { "id": "raw-locator", "pattern": "page\\.locator\\s*\\(\\s*['\\\"](?:xpath=|//)", "description": "Unapproved raw XPath locators bypass locator governance.", "severity": "warning" }
+    ]
+  },
+  "performanceGuardrails": {
+    "enabled": true,
+    "blockProduction": true,
+    "maximumUsers": 25,
+    "maximumDurationSeconds": 120,
+    "maximumRampRate": 2,
+    "maximumRequestRate": 10,
+    "maximumTestSize": 1000,
+    "maximumParallelExecutions": 1,
+    "allowedEnvironments": ["DEV", "QA", "INT", "SIT"]
+  },
+  "hallucinationGuardrails": {
+    "blockUnknownReferences": true,
+    "minimumEvidenceReferences": 1,
+    "blockUnsupportedBusinessRules": true
+  },
+  "privacyGuardrails": {
+    "defaultAction": "block",
+    "blockProductionData": true,
+    "allowSyntheticData": true,
+    "replacementText": "[REDACTED]",
+    "patterns": [
+      { "id": "email", "category": "PII", "pattern": "\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\b", "action": "mask", "severity": "warning" },
+      { "id": "phone", "category": "PII", "pattern": "\\b\\+?[0-9][0-9() .-]{7,}[0-9]\\b", "action": "mask", "severity": "warning" },
+      { "id": "credential-assignment", "category": "credential", "pattern": "(?:password|secret|token|api[_-]?key)\\s*[:=]\\s*[^\\s,;]+", "action": "block", "severity": "critical" },
+      { "id": "vehicle-identifier", "category": "vehicle information", "pattern": "\\b(?:VIN|vehicle.?id)\\s*[:=]\\s*[A-HJ-NPR-Z0-9]{8,17}\\b", "action": "replace", "severity": "critical" },
+      { "id": "vehicle-registration", "category": "vehicle information", "pattern": "(?:vehicle(?:registration|plate|owner)|license.?plate)\\s*[:=]\\s*[^\\s,;]+", "action": "replace", "severity": "critical" },
+      { "id": "customer-information", "category": "customer information", "pattern": "(?:customer(?:name|id|number|address)|customer.?information)\\s*[:=]\\s*[^\\s,;]+", "action": "mask", "severity": "critical" },
+      { "id": "identity-number", "category": "identity information", "pattern": "\\b(?:national.?id|identity.?number|ssn)\\s*[:=]\\s*[A-Z0-9-]{5,}\\b", "action": "block", "severity": "critical" },
+      { "id": "production-data-marker", "category": "production data", "pattern": "\\b(?:production|prod)\\s+(?:customer|vehicle|identity|account)\\s+data\\b", "action": "block", "severity": "critical" }
+    ]
+  },
+  "qualityGates": {
+    "minimumRequirementConfidence": 0.8,
+    "minimumCoveragePercent": 95,
+    "minimumAcceptanceCriteriaCoveragePercent": 100,
+    "minimumCriticalRequirementCoveragePercent": 100,
+    "minimumHighRiskCodeCoveragePercent": 100,
+    "minimumApiCoveragePercent": 95,
+    "minimumContractCoveragePercent": 95,
+    "minimumCriticalApiCoveragePercent": 100,
+    "minimumAuthenticationCoveragePercent": 100,
+    "minimumHighRiskApiCoveragePercent": 100,
+    "minimumReadinessScore": 80,
+    "blockDuplicateTests": true,
+    "blockHallucinations": true,
+    "blockSecurityViolations": true,
+    "blockPrivacyViolations": true,
+    "blockCriticalFindings": true,
+    "warningsBlockExecution": false,
+    "implementationTrust": {
+      "minimumScore": 85,
+      "blockAmbiguousSources": true,
+      "blockUnrelatedCommits": true,
+      "blockInvalidMergeCommits": true,
+      "blockIncorrectBranchMappings": true
+    }
+  }
+}

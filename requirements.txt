@@ -1,0 +1,3 @@
+# No Python production dependencies are currently imported by repository source.
+# The implemented production packages are JavaScript workspace dependencies in
+# api-framework/package.json; see package.json dependency justification metadata.

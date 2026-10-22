@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:test-reuse-analysis:1.0.0",
+  "title": "Existing Test Reuse Analysis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "storyKey", "scenarioFindings", "reusableScenarioIds", "partialReuseScenarioIds", "missingScenarioIds", "missingAcceptanceCriteriaIds", "coverageDelta", "newTestRecommendations"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "storyKey": { "type": "string", "pattern": "^[A-Z][A-Z0-9]+-[1-9][0-9]*$" },
+    "scenarioFindings": { "type": "array", "items": { "type": "object", "required": ["scenarioId", "acceptanceCriteriaIds", "decision", "matchingTestIssueKeys", "exactTestIssueKeys", "matchingAutomationPaths", "exactAutomationPaths", "regressionSuiteNames", "recommendation"], "properties": { "scenarioId": { "type": "string" }, "acceptanceCriteriaIds": { "type": "array", "items": { "type": "string" } }, "decision": { "enum": ["reusable", "partial-reuse", "missing"] }, "matchingTestIssueKeys": { "type": "array", "items": { "type": "string" } }, "exactTestIssueKeys": { "type": "array", "items": { "type": "string" } }, "matchingAutomationPaths": { "type": "array", "items": { "type": "string" } }, "exactAutomationPaths": { "type": "array", "items": { "type": "string" } }, "regressionSuiteNames": { "type": "array", "items": { "type": "string" } }, "recommendation": { "type": "string" } } } },
+    "reusableScenarioIds": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "partialReuseScenarioIds": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "missingScenarioIds": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "missingAcceptanceCriteriaIds": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "coverageDelta": { "type": "array", "items": { "type": "object", "required": ["acceptanceCriteriaId", "reusableTestIssueKeys", "automationPaths", "regressionSuiteIds", "historicalTestIssueKeys", "status"], "properties": { "acceptanceCriteriaId": { "type": "string" }, "reusableTestIssueKeys": { "type": "array", "items": { "type": "string" } }, "automationPaths": { "type": "array", "items": { "type": "string" } }, "regressionSuiteIds": { "type": "array", "items": { "type": "string" } }, "historicalTestIssueKeys": { "type": "array", "items": { "type": "string" } }, "status": { "enum": ["covered", "historical-only", "missing"] } } } },
+    "newTestRecommendations": { "type": "array", "items": { "type": "object", "required": ["scenarioId", "acceptanceCriteriaIds", "action", "rationale"], "properties": { "scenarioId": { "type": "string" }, "acceptanceCriteriaIds": { "type": "array", "items": { "type": "string" } }, "action": { "enum": ["create", "extend-existing", "link-existing"] }, "rationale": { "type": "string" } } } }
+  }
+}

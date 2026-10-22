@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:implementation-trust:1.0.0",
+  "title": "Implementation Trust Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "storyKey", "repository", "score", "decision", "checks", "findings"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "storyKey": { "type": "string", "pattern": "^[A-Z][A-Z0-9]+-[1-9][0-9]*$" },
+    "repository": { "type": "string", "minLength": 1 },
+    "score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "decision": { "enum": ["trusted", "review-required", "blocked"] },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "applicable", "passed", "description"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "applicable": { "type": "boolean" },
+          "passed": { "type": "boolean" },
+          "description": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "category", "severity", "description", "evidenceReferences"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "category": { "enum": ["story-pr-mapping", "story-commit-mapping", "merge-commit-validity", "commit-lineage", "ambiguous-source", "unrelated-commit", "branch-mapping", "trust-score"] },
+          "severity": { "enum": ["warning", "critical"] },
+          "description": { "type": "string", "minLength": 1 },
+          "evidenceReferences": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

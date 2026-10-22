@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:coverage-intelligence:1.0.0",
+  "title": "Coverage Intelligence Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "storyKey", "requirementCoverageMatrix", "codeCoverageMapping", "coverage", "metrics", "gaps", "risks", "governance", "review", "trends", "executiveDashboard"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "storyKey": { "type": "string", "pattern": "^[A-Z][A-Z0-9]+-[1-9][0-9]*$" },
+    "requirementCoverageMatrix": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["requirementId", "requirementType", "priority", "acceptanceCriteriaIds", "coveredAcceptanceCriteriaIds", "uncoveredAcceptanceCriteriaIds", "codePathIds", "testCaseIds", "automationIds", "implementationStatus", "status", "missingLinks"],
+        "properties": {
+          "requirementId": { "type": "string", "minLength": 1 },
+          "requirementType": { "type": "string", "minLength": 1 },
+          "priority": { "enum": ["critical", "high", "medium", "low"] },
+          "acceptanceCriteriaIds": { "type": "array", "items": { "type": "string" } },
+          "coveredAcceptanceCriteriaIds": { "type": "array", "items": { "type": "string" } },
+          "uncoveredAcceptanceCriteriaIds": { "type": "array", "items": { "type": "string" } },
+          "codePathIds": { "type": "array", "items": { "type": "string" } },
+          "testCaseIds": { "type": "array", "items": { "type": "string" } },
+          "automationIds": { "type": "array", "items": { "type": "string" } },
+          "xrayIssueKeys": { "type": "array", "items": { "type": "string" } },
+          "scriptPaths": { "type": "array", "items": { "type": "string" } },
+          "implementationStatus": { "enum": ["implemented", "partially-implemented", "missing", "unmapped"] },
+          "status": { "enum": ["covered", "partially-covered", "uncovered"] },
+          "missingLinks": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "codeCoverageMapping": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "filePath", "functionName", "requirementIds", "acceptanceCriteriaIds", "testCaseIds", "automationIds", "priority", "status"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "filePath": { "type": "string", "minLength": 1 },
+          "functionName": { "type": "string", "minLength": 1 },
+          "apiName": { "type": "string" },
+          "repository": { "type": "string", "minLength": 1 },
+          "branch": { "type": "string", "minLength": 1 },
+          "pullRequest": { "type": "string", "minLength": 1 },
+          "commit": { "type": "string", "minLength": 1 },
+          "requirementIds": { "type": "array", "items": { "type": "string" } },
+          "acceptanceCriteriaIds": { "type": "array", "items": { "type": "string" } },
+          "testCaseIds": { "type": "array", "items": { "type": "string" } },
+          "automationIds": { "type": "array", "items": { "type": "string" } },
+          "priority": { "enum": ["critical", "high", "medium", "low"] },
+          "status": { "enum": ["covered", "uncovered"] }
+        }
+      }
+    },
+    "coverage": { "type": "object" },
+    "metrics": {
+      "type": "object",
+      "required": ["requirementCoveragePercent", "acceptanceCriteriaCoveragePercent", "codeCoveragePercent", "testCaseCoveragePercent", "automationCoveragePercent", "riskCoveragePercent", "coveredRequirements", "partiallyCoveredRequirements", "uncoveredRequirements", "criticalRequirementCoveragePercent", "highRiskCodeCoveragePercent", "preAutomationRequirementCoveragePercent", "readinessScore"],
+      "properties": {
+        "requirementCoveragePercent": { "$ref": "#/$defs/percent" },
+        "acceptanceCriteriaCoveragePercent": { "$ref": "#/$defs/percent" },
+        "codeCoveragePercent": { "$ref": "#/$defs/percent" },
+        "testCaseCoveragePercent": { "$ref": "#/$defs/percent" },
+        "automationCoveragePercent": { "$ref": "#/$defs/percent" },
+        "scriptCoveragePercent": { "oneOf": [{ "$ref": "#/$defs/percent" }, { "type": "null" }] },
+        "xrayCoveragePercent": { "oneOf": [{ "$ref": "#/$defs/percent" }, { "type": "null" }] },
+        "riskCoveragePercent": { "$ref": "#/$defs/percent" },
+        "coveredRequirements": { "type": "integer", "minimum": 0 },
+        "partiallyCoveredRequirements": { "type": "integer", "minimum": 0 },
+        "uncoveredRequirements": { "type": "integer", "minimum": 0 },
+        "criticalRequirementCoveragePercent": { "$ref": "#/$defs/percent" },
+        "highRiskCodeCoveragePercent": { "$ref": "#/$defs/percent" },
+        "preAutomationRequirementCoveragePercent": { "$ref": "#/$defs/percent" },
+        "readinessScore": { "$ref": "#/$defs/percent" }
+      }
+    },
+    "gaps": {
+      "type": "object",
+      "required": ["findings", "missingRequirements", "missingTests", "missingImplementations", "unmappedFiles"],
+      "properties": {
+        "findings": { "type": "array", "items": { "type": "object", "required": ["id", "type", "entityId", "priority", "description", "recommendation"], "properties": { "id": { "type": "string" }, "type": { "enum": ["missing-test", "missing-automation", "missing-script", "missing-xray-link", "missing-implementation", "missing-code-mapping", "uncovered-code-path", "unmapped-code-change", "scope-creep", "acceptance-criteria-gap"] }, "entityId": { "type": "string" }, "priority": { "enum": ["critical", "high", "medium", "low"] }, "description": { "type": "string" }, "recommendation": { "type": "string" } } } },
+        "missingRequirements": { "type": "array", "items": { "type": "string" } },
+        "missingTests": { "type": "array", "items": { "type": "string" } },
+        "missingXrayLinks": { "type": "array", "items": { "type": "string" } },
+        "missingScripts": { "type": "array", "items": { "type": "string" } },
+        "missingImplementations": { "type": "array", "items": { "type": "string" } },
+        "unmappedFiles": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "risks": { "type": "array", "items": { "type": "object", "required": ["entityId", "entityType", "priority", "uncovered", "recommendation"], "properties": { "entityId": { "type": "string" }, "entityType": { "enum": ["requirement", "code-path"] }, "priority": { "enum": ["critical", "high", "medium", "low"] }, "uncovered": { "type": "boolean" }, "recommendation": { "type": "string" } } } },
+    "governance": {
+      "type": "object",
+      "required": ["ready", "reviewStage", "thresholds", "notApplicable", "failures"],
+      "properties": {
+        "ready": { "type": "boolean" },
+        "reviewStage": { "enum": ["pre-automation", "final"] },
+        "thresholds": { "type": "object" },
+        "notApplicable": { "type": "array", "items": { "type": "string" } },
+        "failures": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "review": { "type": "object", "required": ["sufficient", "reasons"], "properties": { "sufficient": { "type": "boolean" }, "reasons": { "type": "array", "items": { "type": "string" } } } },
+    "trends": { "type": "array", "items": { "type": "object", "required": ["metric", "previousPercent", "currentPercent", "changePercentagePoints"], "properties": { "metric": { "type": "string" }, "previousPercent": { "$ref": "#/$defs/percent" }, "currentPercent": { "$ref": "#/$defs/percent" }, "changePercentagePoints": { "type": "number" } } } },
+    "executiveDashboard": { "type": "object", "required": ["storyCoverageScore", "readinessScore", "coverageRisks", "coverageGaps", "governanceReady"], "properties": { "storyCoverageScore": { "$ref": "#/$defs/percent" }, "readinessScore": { "$ref": "#/$defs/percent" }, "coverageRisks": { "type": "integer", "minimum": 0 }, "coverageGaps": { "type": "integer", "minimum": 0 }, "governanceReady": { "type": "boolean" } } }
+  },
+  "$defs": {
+    "percent": { "type": "number", "minimum": 0, "maximum": 100 }
+  }
+}

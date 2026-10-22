@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qe-platform:xray-import:1.0.0",
+  "title": "Organizational Xray Import Model",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "jiraStoryUrl", "jiraProjectKey", "xrayRepositoryPath", "testManagementTool", "tests"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "jiraStoryUrl": { "type": "string", "format": "uri" },
+    "jiraProjectKey": { "type": "string", "minLength": 1 },
+    "xrayRepositoryPath": { "type": "string", "minLength": 1 },
+    "testManagementTool": { "const": "XRAY" },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "summary", "objective", "preconditions", "sourceRequirement", "expectedOutcome", "testType", "status", "steps", "traceability"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^\\[[A-Z][A-Z0-9]+-[1-9][0-9]*\\]\\[AI-[0-9]{2,}\\]$" },
+          "summary": { "type": "string", "minLength": 1 },
+          "objective": { "type": "string", "minLength": 1 },
+          "preconditions": { "type": "array", "items": { "type": "string" } },
+          "sourceRequirement": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "expectedOutcome": { "type": "string", "minLength": 1 },
+          "testType": { "const": "Manual" },
+          "status": { "enum": ["Draft", "Approved", "Deprecated"] },
+          "steps": { "type": "array", "minItems": 1, "items": { "type": "object", "additionalProperties": false, "required": ["action", "data", "expectedResult"], "properties": { "action": { "type": "string", "minLength": 1 }, "data": { "type": "string" }, "expectedResult": { "type": "string", "minLength": 1 } } } },
+          "traceability": { "type": "object", "required": ["storyKey", "storyUrl", "generatedTestCaseId", "requirementIds", "acceptanceCriteriaIds", "scenarioIds", "codeReferences", "automationLinks", "executions", "defects"], "properties": { "storyKey": { "type": "string" }, "storyUrl": { "type": "string", "format": "uri" }, "generatedTestCaseId": { "type": "string" }, "requirementIds": { "type": "array", "items": { "type": "string" } }, "acceptanceCriteriaIds": { "type": "array", "items": { "type": "string" } }, "scenarioIds": { "type": "array", "items": { "type": "string" } }, "testDataSetIds": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }, "codeReferences": { "type": "array", "items": { "type": "object" } }, "evidenceIds": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }, "apiOperationIds": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }, "historicalIssueKeys": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }, "adrIds": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }, "evidenceConfidence": { "type": "number", "minimum": 0, "maximum": 100 }, "automationLinks": { "type": "array", "items": { "type": "object" } }, "executions": { "type": "array", "items": { "type": "object" } }, "defects": { "type": "array", "items": { "type": "object" } } }
+          }
+        }
+      }
+    }
+  }
+}

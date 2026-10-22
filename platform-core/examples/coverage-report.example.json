@@ -1,0 +1,37 @@
+{
+  "totalRequirements": 1,
+  "coveredRequirements": 1,
+  "requirementCoveragePercent": 100,
+  "testCaseCoveragePercent": 100,
+  "codeCoveragePercent": 50,
+  "riskCoveragePercent": 0,
+  "criticalRequirementCoveragePercent": 0,
+  "highRiskCodeCoveragePercent": 0,
+  "coverageByDimension": {
+    "requirement": { "total": 1, "covered": 1, "coveragePercent": 100 },
+    "acceptanceCriteria": { "total": 1, "covered": 1, "coveragePercent": 100 },
+    "codePath": { "total": 2, "covered": 1, "coveragePercent": 50 },
+    "validation": { "total": 0, "covered": 0, "coveragePercent": 0 },
+    "boundary": { "total": 0, "covered": 0, "coveragePercent": 0 },
+    "negative": { "total": 0, "covered": 0, "coveragePercent": 0 },
+    "risk": { "total": 0, "covered": 0, "coveragePercent": 0 },
+    "highRiskCode": { "total": 1, "covered": 0, "coveragePercent": 0 }
+  },
+  "totalTestCases": 1,
+  "automatedTestCases": 1,
+  "automationCoveragePercent": 100,
+  "totalAutomation": 1,
+  "passedAutomation": 1,
+  "executionPassPercent": 100,
+  "gaps": [
+    {
+      "id": "GAP-missing-code-path-coverage-CP-2",
+      "type": "missing-code-path-coverage",
+      "entityId": "CP-2",
+      "severity": "high",
+      "riskScore": 75
+    }
+  ],
+  "overallRiskScore": 75,
+  "riskLevel": "high"
+}
